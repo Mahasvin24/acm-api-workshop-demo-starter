@@ -11,14 +11,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# db equivalent
-restaurants = []
 
-@app.get("/restaurants")
-def get_restaurants():
-    return restaurants
-
-@app.post("/restaurants", status_code=201)
-def add_restaurant(restaurant: Restaurant):
-    restaurants.append(restaurant)
-    return restaurant
