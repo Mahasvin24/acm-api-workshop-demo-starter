@@ -1,0 +1,361 @@
+{
+  "info": {
+    "name": "ACM at UCSB \u00b7 Your first API",
+    "description": "Run requests individually as you follow along. Update collection variables for your Wi-Fi IP and the host registry URL. Tokens are saved locally; do not share exported live tokens. The delete requests remove your own demo data.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "student_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "registry_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "student_ip",
+      "value": "192.168.1.42",
+      "type": "string"
+    },
+    {
+      "key": "student_port",
+      "value": "3001",
+      "type": "string"
+    },
+    {
+      "key": "api_name",
+      "value": "Campus Picks",
+      "type": "string"
+    },
+    {
+      "key": "creator",
+      "value": "Your name",
+      "type": "string"
+    },
+    {
+      "key": "spot_id",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "registration_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "edit_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Your API \u00b7 learn the methods",
+      "item": [
+        {
+          "name": "Say hello",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{student_url}}/",
+            "description": ""
+          }
+        },
+        {
+          "name": "Read campus spots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{student_url}}/spots",
+            "description": ""
+          }
+        },
+        {
+          "name": "Add a spot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{student_url}}/spots",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"The lagoon\",\n  \"tip\": \"Look for herons.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Created\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"spot_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Change its tip",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{student_url}}/spots/{{spot_id}}",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tip\": \"Bring binoculars.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete the spot",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{student_url}}/spots/{{spot_id}}",
+            "description": ""
+          }
+        },
+        {
+          "name": "Try a missing name",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{student_url}}/spots",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tip\": \"What is this place called?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Helpful validation\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The directory \u00b7 share with the room",
+      "item": [
+        {
+          "name": "Read the directory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{registry_url}}/api/apis",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Directory loaded\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register your API",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{registry_url}}/api/apis",
+            "description": "Edit collection variables first. Save the response: the private edit token appears only once. This request automatically remembers it locally.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{api_name}}\",\n  \"creator\": \"{{creator}}\",\n  \"description\": \"Good spots around UCSB.\",\n  \"ip\": \"{{student_ip}}\",\n  \"port\": {{student_port}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Registered\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.code === 201) {",
+                  "  const entry = pm.response.json();",
+                  "  pm.collectionVariables.set(\"registration_id\", entry.id);",
+                  "  pm.collectionVariables.set(\"edit_token\", entry.edit_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Read your registration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{registry_url}}/api/apis/{{registration_id}}",
+            "description": ""
+          }
+        },
+        {
+          "name": "Update your tagline",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{registry_url}}/api/apis/{{registration_id}}",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Campus recommendations, now with a personal touch.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{edit_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Updated\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Try an invalid port",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{registry_url}}/api/apis",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{api_name}}\",\n  \"creator\": \"{{creator}}\",\n  \"description\": \"Good spots around UCSB.\",\n  \"ip\": \"{{student_ip}}\",\n  \"port\": \"3001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Port must be a number\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Remove your registration",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{registry_url}}/api/apis/{{registration_id}}",
+            "description": "",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{edit_token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Removed\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
