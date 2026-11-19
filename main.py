@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ConfigDict, Field
+from models import Spot, Tip
 
 app = FastAPI(title="My first API")
 app.add_middleware(
@@ -9,16 +9,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-# These models describe the JSON students send. FastAPI checks it for us.
-class Tip(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True)
-    tip: str = Field(min_length=1, max_length=200)
-
-
-class Spot(Tip):
-    name: str = Field(min_length=1, max_length=60)
 
 
 # Our database for today: a list. Restarting the server resets it.
