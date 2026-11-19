@@ -1,6 +1,14 @@
 import express from 'express';
 
 export const app = express();
+// Let websites on other origins call your API, including JSON preflight requests.
+app.use((req, res, next) => {
+  res.set({ 'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, HEAD, POST, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization' });
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json({ limit: '8kb' }));
 
 // Your database for today: an array. Restarting the server resets it.
