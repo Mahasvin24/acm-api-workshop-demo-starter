@@ -7,7 +7,7 @@
   "variable": [
     {
       "key": "student_url",
-      "value": "http://localhost:3001",
+      "value": "http://localhost:8000",
       "type": "string"
     },
     {
@@ -22,7 +22,7 @@
     },
     {
       "key": "student_port",
-      "value": "3001",
+      "value": "8000",
       "type": "string"
     },
     {
@@ -168,7 +168,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Helpful validation\", () => pm.response.to.have.status(400));"
+                  "pm.test(\"Helpful validation\", () => pm.response.to.have.status(422));"
                 ]
               }
             }
@@ -305,7 +305,7 @@
             "description": "",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"{{api_name}}\",\n  \"creator\": \"{{creator}}\",\n  \"description\": \"Good spots around UCSB.\",\n  \"ip\": \"{{student_ip}}\",\n  \"port\": \"3001\"\n}",
+              "raw": "{\n  \"name\": \"{{api_name}}\",\n  \"creator\": \"{{creator}}\",\n  \"description\": \"Good spots around UCSB.\",\n  \"ip\": \"{{student_ip}}\",\n  \"port\": \"8000\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
