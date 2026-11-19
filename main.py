@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models import Restaurant
 
 app = FastAPI(title="Restaurant Notes")
+# allows cross origin requests (required for other ppl to use ur api)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -10,14 +11,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Our database for today: a list. Restarting the server resets it.
+# db equivalent
 restaurants = []
-
 
 @app.get("/restaurants")
 def get_restaurants():
     return restaurants
-
 
 @app.post("/restaurants", status_code=201)
 def add_restaurant(restaurant: Restaurant):
